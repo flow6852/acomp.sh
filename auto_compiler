@@ -119,8 +119,8 @@ function RASTC(){
 
 #haskell
 function GHC(){
-    COMMAND="ghc $FILENAME"
-    COMMANDSTR="ghc $FILENAME"
+    COMMAND="stack ghc $FILENAME"
+    COMMANDSTR="stack ghc $FILENAME"
     EXE="./${FILENAME%.*}"
 }
 #you have to input compiler to need for you.
@@ -164,15 +164,28 @@ function CHECKCMD(){
 
 #editor
 function STARTEDITOR(){
-    touch $FULL
-    pid=`ps -ef | grep "$EDITOR $FILE" | grep -v grep | awk '{print $2}'`
-    if [ -z "$pid" ] ; then
-	fprocess=`ps --no-heading -C $EDITOR -o pid`
-	$EDITOR $FULL &
-	bprocess=`ps --no-heading -C $EDITOR -o pid`
-	pid=$(join -v 1 <(echo "$bprocess") <(echo "$fprocess"))
-    fi
-    before=`ls --full-time $FULL | awk '{print $6" - "$7}'`
+	if [ "$EDITOR" == "emacs" ] ; then
+		touch $FULL
+    		pid=`ps -ef | grep "$EDITOR $FILE" | grep -v grep | awk '{print $2}'`
+    		if [ -z "$pid" ] ; then
+			fprocess=`ps --no-heading -C $EDITOR -o pid`
+			$EDITOR $FULL &
+			bprocess=`ps --no-heading -C $EDITOR -o pid`
+			pid=$(join -v 1 <(echo "$bprocess") <(echo "$fprocess"))
+   		fi
+		before=`ls --full-time $FULL | awk '{print $6" - "$7}'`
+	fi
+	if [ "$EDITOR" == "vim" ] ; then
+		touch $FULL
+    		pid=`ps -ef | grep "$EDITOR $FILE" | grep -v grep | awk '{print $2}'`
+    		if [ -z "$pid" ] ; then
+			fprocess=`ps --no-heading -C xterm -o pid`
+			xterm -bg black -fg white -e vim $FULL &
+			bprocess=`ps --no-heading -C xterm -o pid`
+			pid=$(join -v 1 <(echo "$bprocess") <(echo "$fprocess"))
+   		fi
+		before=`ls --full-time $FULL | awk '{print $6" - "$7}'`
+	fi
 }
 
 #loop
