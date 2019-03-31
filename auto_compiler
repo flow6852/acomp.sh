@@ -80,33 +80,42 @@ function JAVAC(){
 
 #TEX compile
 function TEX(){
-    COMMAND=TEXCMP
-    EXE=STARTEVINCE
-    COMMANDSTR="platex $FILENAME
-    platex $FILENAME
-    dvipdfmx ${FILENAME%.*}.dvi"
+    COMMAND=".mkpdf.sh $FILENAME"
+    EXESTR="mupdf"
+    EXE=PDFVIEWER
+    COMMANDSTR=".mkpdf.sh $FILENAME"
+    #COMMAND=TEXCMP
+    #COMMANDSTR="platex $FILENAME
+    #platex $FILENAME
+    #dvipdfmx ${FILENAME%.*}.dvi"
 }
 
-function TEXCMP(){
-    platex $FILENAME
-    platex $FILENAME
-    dvipdfmx ${FILENAME%.*}.dvi
-}
+#function TEXCMP(){
+#    platex $FILENAME
+#    platex $FILENAME
+#    dvipdfmx ${FILENAME%.*}.dvi
+#}
 
-#TEX check(using evince)
-function STARTEVINCE(){
-    evincepid=`ps -ef | grep "evince ${FILENAME%.*}.pdf" | grep -v grep | awk '{print $2}'` ;
-    if [ -z "$evincepid" ] ; then
-	fevinceprocess=`ps --no-heading -C evince -o pid`
-	evince ${FILENAME%.*}.pdf &
-	bevinceprocess=`ps --no-heading -C evince -o pid`
-	evincepid=$(join -v 1 <(echo "$bevinceprocess") <(echo "$fevinceprocess"))
-    fi
+
+#function TEXCMP(){
+#	$HOME/.local/bin/.mkpdf.sh $FILENAME
+#}
+
+#TEX check(using mupdf)
+function PDFVIEWER(){
+	viewerpid=`ps -ef | grep "mupdf ${FILENAME%.*}.pdf" | grep -v grep | awk '{print $2}'` ;
+	if [ "$viewerpid" != "" ] ; then
+		kill -9 $viewerpid &> /dev/null
+	fi
+	fviewerprocess=`ps --no-heading -C mupdf -o pid`
+	mupdf ${FILENAME%.*}.pdf &
+	bviewerprocess=`ps --no-heading -C mupdf -o pid`
+	viewerpid=$(join -v 1 <(echo "$bviewerprocess") <(echo "$fviewerprocess"))
 }
 
 function FINEVINCE(){
-    if [ -n "$evincepid" ] ; then
-	kill -9 $evincepid
+    if [ -n "$viewerpid" ] ; then
+	kill -9 $viewerpid
     fi
 }
 
@@ -142,13 +151,18 @@ function EXE (){
 
 # check command and read to input argument and redirection fileecho "start."
 function CHECKCMD(){
-    echo "Do you want to check command?(y/n)"
+    echo "Do you want to check command?(Y/n)"
     read answer
     if [ "$answer" != "n" ] ; then
-	echo "If you change running command, please input now:\"$EXE\""
+	if [ "$EXESTR" != "" ] ; then 
+		echo "If you change running command, please input now:\"$EXESTR\""
+	else
+		echo "If you change running command, please input now:\"$EXE\""
+	fi
 	read RUNCMD
 	if [ -n "$RUNCMD" ] ; then
 	    EXE=$RUNCMD
+	    EXESTR=$RUNCMD
 	fi
 	echo "Please input argument."
 	read ARGUMENT
