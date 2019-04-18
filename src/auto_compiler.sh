@@ -61,7 +61,7 @@ function USEGUI(){
 		kill -15 $GUIPID &> /dev/null &
 	fi
 	fviewerprocess=`ps --no-heading -C $1 -o pid`
-	$1 $2 &> /de/null &
+	$1 $2 2>&1> /dev/null &
 	bviewerprocess=`ps --no-heading -C $1 -o pid`
 	GUIPID=$(join -v 1 <(echo "$bviewerprocess") <(echo "$fviewerprocess"))
 }
