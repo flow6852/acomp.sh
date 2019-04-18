@@ -58,17 +58,17 @@ function READFILE(){
 function USEGUI(){
 	GUIPID=`ps -ef | grep "$1 $2" | grep -v grep | awk '{print $2}'`
 	if [ "$GUIPID" != "" ] ; then
-		kill -9 $GUIPID &> /dev/null &
+		kill -15 $GUIPID &> /dev/null &
 	fi
 	fviewerprocess=`ps --no-heading -C $1 -o pid`
-	$1 $2 &
+	$1 $2 &> /de/null &
 	bviewerprocess=`ps --no-heading -C $1 -o pid`
 	GUIPID=$(join -v 1 <(echo "$bviewerprocess") <(echo "$fviewerprocess"))
 }
 
 function FINCMD(){
     if [ -n "$GUIPID" ] ; then
-	kill -9 $GUIPID 
+	kill -15 $GUIPID 
     fi
 }
 
