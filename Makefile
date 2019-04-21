@@ -1,4 +1,4 @@
-TARGET=auto_compiler.sh
+TARGET=acomp.sh
 INSDIR=$(HOME)/.local/bin
 
 
