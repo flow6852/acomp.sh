@@ -2,7 +2,7 @@
 
 INTERVAL=1
 FILE=$1
-CONFIG=$HOME/.config/auto_compiler/
+CONFIG=$HOME/.config/acomp/
 
 #-h text
 function HELPCMD(){
