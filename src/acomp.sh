@@ -141,8 +141,7 @@ function STARTEDITOR(){
 			pid=$(join -v 1 <(echo "$bprocess") <(echo "$fprocess"))
    		fi
 		before=`ls --full-time $FULL | awk '{print $6" - "$7}'`
-	fi
-	if [ "$EDITOR" == "vim" ] ; then
+	elif [ "$EDITOR" == "vim" || $EDITOR == "nvim" ] ; then
 		touch $FULL
     		pid=`ps -ef | grep "$EDITOR $FILE" | grep -v grep | awk '{print $2}'`
     		if [ -z "$pid" ] ; then
